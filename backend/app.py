@@ -5,12 +5,22 @@ import pandas as pd
 import os
 import pickle
 from ml_pipeline.model_selection import run_automl
+import shutil
+
+
+UPLOAD_FOLDER = 'uploads'
+MODEL_FOLDER = 'models'
+def clear_folders():
+    for folder in [UPLOAD_FOLDER, MODEL_FOLDER]:
+        if os.path.exists(folder):
+            shutil.rmtree(folder)
+        os.makedirs(folder)
+
+clear_folders()
 
 app = Flask(__name__)
 CORS(app)
 
-UPLOAD_FOLDER = 'uploads'
-MODEL_FOLDER = 'models'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(MODEL_FOLDER, exist_ok=True)
 
