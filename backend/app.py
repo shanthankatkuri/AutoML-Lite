@@ -21,6 +21,10 @@ clear_folders()
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/')
+def home():
+    return 'AutoML Lite backend is running!'
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(MODEL_FOLDER, exist_ok=True)
 
@@ -57,4 +61,5 @@ def download_file(filename):
     return send_from_directory('models', filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
