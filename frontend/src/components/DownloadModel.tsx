@@ -42,7 +42,7 @@ interface DownloadModelProps {
 
 const DownloadModel: React.FC<DownloadModelProps> = ({ modelFilename }) => {
     const handleDownload = () => {
-        const url = `http://localhost:5000/download/${modelFilename}`
+        const url = `https://automl-lite.onrender.com/download/${modelFilename}`
         window.open(url, '_blank')
     }
 

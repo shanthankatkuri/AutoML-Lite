@@ -81,7 +81,7 @@ const AutomlRunner: React.FC<AutomlRunnerProps> = ({ filePath, task, onModelRead
         setLoading(true)
         setError('')
         try {
-            const res = await axios.post('http://localhost:5000/run_automl', {
+            const res = await axios.post('https://automl-lite.onrender.com/run_automl', {
                 file_path: filePath,
                 task: task
             })

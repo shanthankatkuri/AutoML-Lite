@@ -88,7 +88,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUploadSuccess }) => {
     formData.append('file', file)
 
     try {
-      const response = await axios.post('http://localhost:5000/upload', formData)
+      const response = await axios.post('https://automl-lite.onrender.com/upload', formData)
       setMessage('File uploaded successfully!')
       setStatus('success')
       onUploadSuccess(response.data.file_path)
