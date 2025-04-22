@@ -1,11 +1,10 @@
 import streamlit as st
 import requests
 import os
-import shutil
-import atexit
 
 BACKEND_URL = "http://localhost:5000"
 UPLOADS_DIR = "uploads"
+MODELS_FOLDER = "models"
 
 st.title("AutoML Lite")
 
@@ -49,11 +48,3 @@ if uploaded_file:
                 st.markdown(f"[Download Model]({download_url})")
 
                 # After everything is done — Clean up uploads folder
-                shutil.rmtree(UPLOADS_DIR)
-def cleanup():
-    if os.path.exists(UPLOADS_DIR):
-        shutil.rmtree(UPLOADS_DIR)
-    if os.path.exists(MODEL_FOLDER):
-        shutil.rmtree(MODEL_FOLDER)
-
-atexit.register(cleanup)
