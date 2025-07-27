@@ -9,12 +9,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error before making login attempt
+    setError(""); 
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
@@ -43,7 +43,7 @@ export default function Login() {
   };
 
   const closeModal = () => {
-    setShowModal(false); // Close the modal when clicked
+    setShowModal(false);
   };
 
   return (
@@ -80,6 +80,11 @@ export default function Login() {
               className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your password"
             />
+            <div className="mt-2">
+              <a href="/forgotpassword" className="text-sm text-blue-500 hover:underline">
+              Forgot Password?
+              </a>
+            </div>
           </div>
 
           <button

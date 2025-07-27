@@ -6,6 +6,8 @@ import os
 import pickle
 from ml_pipeline.model_selection import run_automl
 import shutil
+from llm_chain import generate_pandas_code
+import re
 
 
 UPLOAD_FOLDER = 'uploads'
@@ -59,6 +61,47 @@ def automl():
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
     return send_from_directory('models', filename, as_attachment=True)
+
+def extract_code(text):
+    match = re.search(r"```(?:python)?\s*(.*?)```", text, re.DOTALL)
+    code = match.group(1).strip() if match else text.strip()
+
+    # ✅ If the code is just an expression like df.head(), wrap it
+    if "result" not in code and code.startswith("df.") and "\n" not in code:
+        code = f"result = {code}"
+    return code
+
+@app.route("/query_dataset", methods=["POST"])
+def query_dataset():
+    data = request.get_json()
+    file_path = data["file_path"]
+    query = data["query"]
+
+    print(f"⏳ Received query: {query}")
+
+    # 🛠️ FIX: Load CSV into a DataFrame here
+    try:
+        df = pd.read_csv(file_path)
+    except Exception as e:
+        print(f"❌ Failed to load file: {e}")
+        return jsonify({"error": "Failed to load dataset"}), 500
+
+    # ✅ Pass DataFrame instead of file_path
+    code = generate_pandas_code(query, df)
+    if code is None:
+        return jsonify({"error": "Failed to generate code"}), 500
+    code = extract_code(code)
+    # Execute generated code safely
+    try:
+        local_vars = {"df": df}
+        exec(code, {}, local_vars)
+        result = local_vars.get("result", None)
+        if result is None:
+            return jsonify({"error": "Code did not produce any result"}), 500
+        return jsonify({"result": result.to_dict(orient="records")})
+    except Exception as e:
+        print(f"❌ Error executing generated code: {e}")
+        return jsonify({"error": "Execution failed"}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))

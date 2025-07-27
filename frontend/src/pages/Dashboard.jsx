@@ -5,6 +5,7 @@ import { signOut } from "firebase/auth";
 import DatasetUpload from "../components/DatasetUpload";
 import TaskSelector from "../components/TaskSelector";
 import TrainModel from "../components/TrainModel";
+import QueryDataset from "../components/QueryDataset";
 
 export default function Dashboard() {
   const [filePath, setFilePath] = useState("");
@@ -46,6 +47,9 @@ export default function Dashboard() {
         <DatasetUpload onUploadSuccess={handleUploadSuccess} />
         {filePath && (
           <>
+            <div className="my-6">
+              <QueryDataset filePath={filePath} />
+            </div>
             <TaskSelector setTask={setTask} />
             {task && (
               <TrainModel
